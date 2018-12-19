@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="StateEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="enabled"/>
+      <xs:enumeration value="disabled"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType   name="ApplicationType">
+    <xs:sequence>
+      <xs:element name="Setter">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="Property" type="xs:string" use="required" />
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="2" name="Program">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="Architecture" type="xs:string" use="required" />
+              <xs:attribute name="PackageId" type="xs:string" use="required" />
+              <xs:attribute name="PackageName" type="xs:string" use="required" />
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="Dependencies">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Dependency">
+              <xs:complexType>
+                <xs:attribute name="Type" type="xs:string" use="required" />
+                <xs:attribute name="Application.Id" type="xs:unsignedShort" use="required" />
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="Filters">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Filter" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element maxOccurs="unbounded" name="Setter">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="Property" type="xs:string" use="required" />
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="Type" type="xs:string" use="required" />
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ApplicationMappings">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Match">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element maxOccurs="unbounded" name="Setter">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="Property" type="xs:string" use="required" />
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="Type" type="xs:string" use="required" />
+                <xs:attribute name="OperatorCondition" type="xs:string" use="required" />
+                <xs:attribute name="DisplayName" type="xs:string" use="required" />
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="DisplayName" type="xs:string" use="required" />
+    <xs:attribute name="State" type="StateEnum" use="required" />
+    <xs:attribute name="Id" type="xs:unsignedShort" use="required" />
+    <xs:attribute name="Guid" type="xs:string" use="optional" />
+    <xs:attribute name="Name" type="xs:string" use="optional" />
+    <xs:attribute name="Type" type="xs:string" use="optional" />
+  </xs:complexType>
+
+  <xs:element name="Applications">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SelectedApplications" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded"  minOccurs="0" name="SelectApplication">
+                <xs:complexType>
+                  <xs:attribute name="Application.Id" type="xs:unsignedShort" use="required" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ApplicationGroup" maxOccurs="unbounded"  minOccurs="0" >
+          <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+              <xs:element name="Application" type="ApplicationType" maxOccurs="unbounded" />
+              <xs:element name="ApplicationGroup" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Application" type="ApplicationType" maxOccurs="unbounded" minOccurs="0"/>
+                  </xs:sequence>
+                  <xs:attribute name="Name" type="xs:string" />
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+            <xs:attribute name="Name" type="xs:string" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="RootDisplayName" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:key name="UniqueAppIds">
+      <xs:selector xpath=".//Application" />
+      <xs:field xpath="@Id" />
+    </xs:key>
+  </xs:element>
+</xs:schema>

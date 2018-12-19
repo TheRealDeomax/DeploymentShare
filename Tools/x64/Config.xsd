@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="typeValues">
+    <xs:restriction base="xs:byte">
+      <xs:enumeration value="-1"/>
+      <xs:enumeration value="0"/>
+      <xs:enumeration value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="setterTypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="string"/>
+      <xs:enumeration value="boolean"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="SetterType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Property" type="xs:string" use="required" />
+        <xs:attribute name="Type" type="setterTypes" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="ValidatorType">
+    <xs:sequence>
+      <xs:element name="Setter" type="SetterType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Type" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="FieldType">
+    <xs:sequence>
+      <xs:element name="Default" minOccurs="0" />
+      <xs:element name="Validator" type="ValidatorType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required" />
+    <xs:attribute name="Enabled" type="xs:boolean" use="required" />
+    <xs:attribute name="Summary" type="xs:string" use="optional" />
+    <xs:attribute name="VarName" type="xs:string" use="optional" />
+  </xs:complexType>
+
+  <xs:complexType name="DataItemType">
+    <xs:sequence>
+      <xs:element name="Setter" type="SetterType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Data" type="DataType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DataType">
+    <xs:sequence>
+      <xs:element name="Setter" type="SetterType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="DataItem" type="DataItemType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="CodeType">
+    <xs:attribute name="State" type="xs:string" use="required" />
+    <xs:attribute name="Type" type="typeValues" use="required" />
+    <xs:attribute name="Value" type="xs:string" use="required" />
+    <xs:attribute name="Text" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:element name="Wizard">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="DLLs">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="DLL">
+                <xs:complexType>
+                  <xs:attribute name="Name" type="xs:string" use="required" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" name="Style">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="Setter" type="SetterType" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Pages">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="Page">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" name="Fields">
+                      <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                          <xs:element minOccurs="0" maxOccurs="unbounded" name="RadioGroup">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="Default" minOccurs="0" maxOccurs="1" />
+                              </xs:sequence>
+                              <xs:attribute name="Name" type="xs:string" use="required" />
+                              <xs:attribute name="VarName" type="xs:string" use="optional" />
+                              <xs:attribute name="Enabled" type="xs:boolean" use="optional" />
+                              <xs:attribute name="Summary" type="xs:string" use="optional" />
+                              <xs:attribute name="Locked" type="xs:boolean" use="optional" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="FieldType" />
+                        </xs:choice>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="Setter" type="SetterType" />
+                    <xs:element minOccurs="0" name="Tasks">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element maxOccurs="unbounded" name="Task">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="0" maxOccurs="unbounded" name="File">
+                                  <xs:complexType>
+                                    <xs:attribute name="Source" type="xs:string" use="required" />
+                                    <xs:attribute name="Dest" type="xs:string" use="required" />
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element minOccurs="0" maxOccurs="unbounded" name="Setter" type="SetterType" />
+                                <xs:element name="ExitCodes">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="ExitCode" maxOccurs="unbounded" />
+                                      <xs:element name="Error" minOccurs="0" maxOccurs="unbounded" />
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="DisplayName" type="xs:string" use="required" />
+                              <xs:attribute name="Type" type="xs:string" use="required" />
+                              <xs:attribute name="Name" type="xs:string" use="optional" />
+                              <xs:attribute name="DependsOn" type="xs:string" use="optional" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="NameTitle" type="xs:string" use="required" />
+                        <xs:attribute name="StatusTitle" type="xs:string" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Data" type="DataType" minOccurs="0" maxOccurs="unbounded" />
+                  </xs:sequence>
+                  <xs:attribute name="Name" type="xs:string" use="required" />
+                  <xs:attribute name="DisplayName" type="xs:string" use="required" />
+                  <xs:attribute name="Type" type="xs:string" use="required" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="StageGroups" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="StageGroup" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Stage" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="PageRef" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="Page" type="xs:string" />
+                            </xs:complexType>
+
+                            <!-- Ensures the page references by this element exists under Pages/Page -->
+                            <xs:keyref name="PageExists" refer="UniquePageName">
+                              <xs:selector xpath="." />
+                              <xs:field xpath="@Page" />
+                            </xs:keyref>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="DisplayName" type="xs:string" />
+                        <xs:attribute name="Name" type="xs:string" />
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="DisplayName" type="xs:string" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+
+    <!-- Ensures that the Name attribute is unique among all the pages in the file -->
+    <xs:key name="UniquePageName">
+      <xs:selector xpath="./Pages/Page" />
+      <xs:field xpath="@Name" />
+    </xs:key>
+  </xs:element>
+</xs:schema>

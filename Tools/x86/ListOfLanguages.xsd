@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="LOCALEDATA">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="LOCALE">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ILANGUAGE" type="xs:string" />
+              <xs:element name="IFLAGS" type="xs:unsignedByte" />
+              <xs:element name="SSPECIFICCULTURE" type="xs:string" />
+              <xs:element name="IPARENT" type="xs:string" />
+              <xs:element name="SNAME" type="xs:string" />
+              <xs:element name="SSCRIPTS" type="xs:string" />
+              <xs:element name="SENGLANGUAGE" type="xs:string" />
+              <xs:element name="SABBREVLANGNAME" type="xs:string" />
+              <xs:element name="SISO639LANGNAME" type="xs:string" />
+              <xs:element name="SISO639LANGNAME2" type="xs:string" />
+              <xs:element name="SNATIVELANGNAME" type="xs:string" />
+              <xs:element name="ITEXTINFO" type="xs:string" />
+              <xs:element name="ICOMPAREINFO" type="xs:string" />
+              <xs:element name="IINPUTLANGUAGEHANDLE" type="xs:string" />
+              <xs:element name="SENGDISPLAYNAME" type="xs:string" />
+              <xs:element name="SNATIVEDISPLAYNAME" type="xs:string" />
+              <xs:element name="DEFAULTKEYBOARD" type="xs:string" />
+              <xs:element minOccurs="0" name="IDEFAULTLANGUAGE" type="xs:string" />
+              <xs:element minOccurs="0" name="SPARENT" type="xs:string" />
+              <xs:element minOccurs="0" name="SREGIONNAME" type="xs:string" />
+              <xs:element minOccurs="0" name="ICOUNTRY" type="xs:unsignedShort" />
+              <xs:element minOccurs="0" name="SENGCOUNTRY" type="xs:string" />
+              <xs:element minOccurs="0" name="SNATIVECOUNTRY" type="xs:string" />
+              <xs:element minOccurs="0" name="SABBREVCTRYNAME" type="xs:string" />
+              <xs:element minOccurs="0" name="SISO3166CTRYNAME" type="xs:string" />
+              <xs:element minOccurs="0" name="SISO3166CTRYNAME2" type="xs:string" />
+            </xs:sequence>
+            <xs:attribute name="ID" type="xs:string" use="required" />
+            <xs:attribute name="RefName" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
